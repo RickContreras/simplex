@@ -24,8 +24,15 @@ label_columnas.pack(padx=5, pady=5)
 entrada_columnas = ctk.CTkEntry(frame)
 entrada_columnas.pack(padx=5, pady=5)
 
+print(entrada_filas.get())
+#print(entrada_columnas)
+
+def generadora_funcion():
+    return generar_filas_columnas(entrada_filas, entrada_columnas, ventana)
+
+
 # Botón para generar filas y columnas
-boton_generar = tk.Button(frame, text="Generar problema", command=generar_filas_columnas(entrada_filas, entrada_columnas, ventana))
+boton_generar = tk.Button(frame, text="Generar problema", command=generadora_funcion)
 boton_generar.pack(padx=5, pady=5)
 
 # Ejecutar ventana

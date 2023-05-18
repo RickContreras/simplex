@@ -1,6 +1,9 @@
 import tkinter as tk
+import customtkinter as ctk
 
 def generar_filas_columnas(entrada_filas, entrada_columnas, ventana):
+    # print(entrada_filas)
+    # print(entrada_columnas)
     num_filas = int(entrada_filas.get())
     num_columnas = int(entrada_columnas.get())
     
@@ -11,7 +14,7 @@ def generar_filas_columnas(entrada_filas, entrada_columnas, ventana):
     # Crear marco en la nueva ventana
     frame_nueva_ventana = tk.Frame(nueva_ventana)
     frame_nueva_ventana.pack(padx=10, pady=10)
-
+    
     for i in range(num_filas+2):
         for j in range(num_columnas+3):
             if (i==0):
