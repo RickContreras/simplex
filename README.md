@@ -11,8 +11,8 @@ Nota: Por completar
 
 ```bash
   git clone
-  python3 -m venv venv
-  source env/bin/activate
+  python3 -m venv virtual-env-name
+  source virtual-env-name/bin/activate
   pip3 install -r requirements.txt
 ```
     
