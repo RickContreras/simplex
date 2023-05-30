@@ -1,12 +1,14 @@
 import tkinter as tk
+import pandas as pd
+import numpy as np
 import customtkinter as ctk
 
 def generar_filas_columnas(entrada_filas, entrada_columnas, ventana):
-    # print(entrada_filas)
-    # print(entrada_columnas)
+   
     num_filas = int(entrada_filas.get())
     num_columnas = int(entrada_columnas.get())
-    
+    casillas = []
+
     # Crear nueva ventana
     nueva_ventana = tk.Toplevel(ventana)
     nueva_ventana.title("Simplex Aumentado")
@@ -39,4 +41,22 @@ def generar_filas_columnas(entrada_filas, entrada_columnas, ventana):
                     label.grid(row=i, column=j, padx=5, pady=5)
                 else:
                     entry = ctk.CTkEntry(frame_nueva_ventana)
+                    
+                    casillas.append(entry)
                     entry.grid(row=i, column=j, padx=5, pady=5)
+    
+    print(casillas)
+    return casillas, num_filas, num_columnas
+
+def obtener_coeficientes(casillas, num_filas, num_columnas):
+    filas = []
+    # for i in range():
+
+    # array_casillas = np.array(casillas)
+
+    for i in range(0, num_filas):
+
+        fila = casillas[i*num_columnas:(i+1)*num_columnas]
+        filas.append(filas)
+
+
