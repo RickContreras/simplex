@@ -60,3 +60,4 @@ def obtener_coeficientes(casillas, num_filas, num_columnas):
         filas.append(filas)
 
 
+
