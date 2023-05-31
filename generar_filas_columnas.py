@@ -1,6 +1,8 @@
 import customtkinter as ctk
 import tkinter as tk
 
+from funcions import mostrar_tabla, mostrar_grafica
+
 entradas:list=[]
 
 def generar_filas_columnas(entrada_filas, entrada_columnas, ventana, variables_involucradas):
