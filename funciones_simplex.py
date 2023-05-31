@@ -4,66 +4,14 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-from scipy.optimize import linprog
+from obtener_matrices import obtener_datos
+from metodo_grafico import mostrar_grafica
 
 filas:list=[]
 entradas:list=[]
 num_filas:int=0
 num_columnas:int=0
 num_variables_involucradas:int=0
-
-def funcion_lineal(x_1, coef_a, coef_b, coef_c):
-    z = coef_a*x_1 + coef_b*x_1 - coef_c
-    return z
-
-def funcion_constante_y(x, const):
-    return np.full(x.shape, const)
-
-# def funcion_constante_x():
-
-
-def mostrar_grafica():
-    c, A, b, tiene_solucion = obtener_datos(num_columnas)
-    print("c")
-    print(c)
-    print("A")
-    print(A)
-    print("b")
-    print(b)
-    print("tiene_solución")
-    print(tiene_solucion)
-    print(A[2, 0], A[2, 1])
-
-    # Crear una nueva ventana Toplevel
-    ventana_grafica = ctk.CTkToplevel()
-
-    # Crear datos para la gráfica de ejemplo (puedes reemplazarlo con tus propios datos)
-    x = np.linspace(0, b[0], 1000)
-    x_1 = np.linspace(0, 10, 1000)
-    x_2 = np.linspace(0, 40, 1000)
-    y = funcion_lineal(x_1, A[2, 0], A[2, 1], b[2])
-    y_1 = funcion_constante_y(x, b[1]) 
-
-    # Crear una figura de matplotlib y agregar una gráfica
-    fig = plt.Figure(figsize=(6, 4), dpi=100)
-    ax = fig.add_subplot(111)
-    ax.vlines(x = b[0], ymin = 0, ymax = max(x_2), colors = 'purple')
-    ax.plot(x, y)
-    ax.plot(x, y_1)
-    ax.grid(True)
-
-    # Crear un objeto FigureCanvasTkAgg para mostrar la figura en la ventana
-    canvas = FigureCanvasTkAgg(fig, master=ventana_grafica)
-    canvas.draw()
-
-    # Agregar el widget Canvas a la ventana
-    canvas.get_tk_widget().pack()
-
-    # Configurar la ventana y otros widgets si es necesario
-    ventana_grafica.title("Gráfica del problema")
-    # ...
-
 
 def generar_filas_columnas(entrada_filas, entrada_columnas, ventana, variables_involucradas):
  
@@ -125,35 +73,17 @@ def generar_filas_columnas(entrada_filas, entrada_columnas, ventana, variables_i
         boton_obtener_datos.grid(row=num_columnas+3, column=((num_columnas+3)//2), padx=5, pady=5)
 
         if(num_variables_involucradas==2):
-            boton_graficar = ctk.CTkButton(frame_nueva_ventana, text="Graficar problema", command=mostrar_grafica)
+
+            def funcion_mostrar_graf():
+                return mostrar_grafica(num_columnas, entradas, filas)
+
+            boton_graficar = ctk.CTkButton(frame_nueva_ventana, text="Graficar problema", command=funcion_mostrar_graf)
             boton_graficar.grid(row=num_columnas+3, column=(((num_columnas+3)//2)-1), padx=5, pady=5)
 
 
     except ValueError:
         tk.messagebox.showerror(title="Error", message="Introduzca solo numeros enteros.")
         
-def obtener_datos(num_columnas):
-    try:
-        valores = [float(entrada.get()) for entrada in entradas]
-        iteraciones = len(valores)/(num_columnas+1)
-        iteraciones = int(iteraciones)
-        for i in range(iteraciones):
-        
-            filas.append([ x for x in valores[(num_columnas+1)*i:(num_columnas+1)*(i+1)] ])
-
-        matrix=np.array(filas)
-
-        c=matrix[0][:num_columnas]
-        A=matrix[1:,:num_columnas]
-        b=matrix[1:,num_columnas]
-
-        res=linprog(c,A_eq=A, b_eq=b, method="highs")
-
-        return (c,A,b,res)
-    
-    except ValueError:
-        tk.messagebox.showerror(title="Error", message="Introduzca soló numeros.")
-
     
 
 def mostrar_tabla():
@@ -162,7 +92,7 @@ def mostrar_tabla():
     global num_columnas
     global num_variables_involucradas
 
-    c,A,b,tiene_solucion=obtener_datos(num_columnas)
+    c,A,b,tiene_solucion=obtener_datos(num_columnas, entradas, filas)
 
     columnas =["Z"]
     columnas.extend([f"x{i}" for i in range(1,num_columnas+1)])
