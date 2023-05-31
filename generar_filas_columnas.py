@@ -17,8 +17,6 @@ def generar_filas_columnas(entrada_filas, entrada_columnas, ventana, variables_i
         nueva_ventana = ctk.CTkToplevel(ventana)
         nueva_ventana.title("Simplex Aumentado")
         
-
-
         # Crear marco en la nueva ventana
         frame_nueva_ventana = ctk.CTkFrame(nueva_ventana)
         frame_nueva_ventana.pack(padx=10, pady=10)
@@ -39,23 +37,27 @@ def generar_filas_columnas(entrada_filas, entrada_columnas, ventana, variables_i
         label.grid(row=0, column=num_columnas+2, padx=5, pady=5)
 
         for i in range(1, num_filas+2):
-            for j in range(num_columnas+3):
-                if (j==0):
+            # Encabezado de fila
+            if(i==1):
+                label = ctk.CTkLabel(frame_nueva_ventana, text=f"Función Objetivo:")
+            else:
+                label = ctk.CTkLabel(frame_nueva_ventana, text=f"Restricción {i-1}:")
+            label.grid(row=i, column=0, padx=5, pady=5)
 
-                    if(i==1):
-                        label = ctk.CTkLabel(frame_nueva_ventana, text=f"Función Objetivo:")
-                        label.grid(row=i, column=j, padx=5, pady=5)
-                    else:
-                        label = ctk.CTkLabel(frame_nueva_ventana, text=f"Restricción {i-1}:")
-                        label.grid(row=i, column=j, padx=5, pady=5)
+            # Columnas de datos
+            for j in range(1, num_columnas+1):
+                entry = ctk.CTkEntry(frame_nueva_ventana)
+                entry.grid(row=i, column=j, padx=5, pady=5)
+                entradas.append(entry)
 
-                elif(j==num_columnas+1):
-                    label = ctk.CTkLabel(frame_nueva_ventana, text="=")
-                    label.grid(row=i, column=j, padx=5, pady=5)
-                else:
-                    entry = ctk.CTkEntry(frame_nueva_ventana)
-                    entry.grid(row=i, column=j, padx=5, pady=5)
-                    entradas.append(entry)
+            # Simbolo igual por cada fila
+            label = ctk.CTkLabel(frame_nueva_ventana, text="=")
+            label.grid(row=i, column=num_columnas+1, padx=5, pady=5)
+
+            # Resultado por fila
+            entry = ctk.CTkEntry(frame_nueva_ventana)
+            entry.grid(row=i, column=num_columnas+2, padx=5, pady=5)
+            entradas.append(entry)        
 
         boton_obtener_datos = ctk.CTkButton(frame_nueva_ventana, text="Solucionar", command=mostrar_tabla)
         boton_obtener_datos.grid(row=num_columnas+3, column=((num_columnas+3)//2), padx=5, pady=5)
