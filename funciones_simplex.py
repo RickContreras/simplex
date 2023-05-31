@@ -13,18 +13,45 @@ num_filas:int=0
 num_columnas:int=0
 num_variables_involucradas:int=0
 
+def funcion_lineal(x_1, coef_a, coef_b, coef_c):
+    z = coef_a*x_1 + coef_b*x_1 - coef_c
+    return z
+
+def funcion_constante_y(x, const):
+    return np.full(x.shape, const)
+
+# def funcion_constante_x():
+
+
 def mostrar_grafica():
+    c, A, b, tiene_solucion = obtener_datos(num_columnas)
+    print("c")
+    print(c)
+    print("A")
+    print(A)
+    print("b")
+    print(b)
+    print("tiene_solución")
+    print(tiene_solucion)
+    print(A[2, 0], A[2, 1])
+
     # Crear una nueva ventana Toplevel
     ventana_grafica = ctk.CTkToplevel()
 
     # Crear datos para la gráfica de ejemplo (puedes reemplazarlo con tus propios datos)
-    x = [1, 2, 3, 4, 5]
-    y = [2, 4, 6, 8, 10]
+    x = np.linspace(0, b[0], 1000)
+    x_1 = np.linspace(0, 10, 1000)
+    x_2 = np.linspace(0, 40, 1000)
+    y = funcion_lineal(x_1, A[2, 0], A[2, 1], b[2])
+    y_1 = funcion_constante_y(x, b[1]) 
 
     # Crear una figura de matplotlib y agregar una gráfica
     fig = plt.Figure(figsize=(6, 4), dpi=100)
     ax = fig.add_subplot(111)
+    ax.vlines(x = b[0], ymin = 0, ymax = max(x_2), colors = 'purple')
     ax.plot(x, y)
+    ax.plot(x, y_1)
+    ax.grid(True)
 
     # Crear un objeto FigureCanvasTkAgg para mostrar la figura en la ventana
     canvas = FigureCanvasTkAgg(fig, master=ventana_grafica)
@@ -36,8 +63,6 @@ def mostrar_grafica():
     # Configurar la ventana y otros widgets si es necesario
     ventana_grafica.title("Gráfica del problema")
     # ...
-
-
 
 
 def generar_filas_columnas(entrada_filas, entrada_columnas, ventana, variables_involucradas):
@@ -109,9 +134,9 @@ def generar_filas_columnas(entrada_filas, entrada_columnas, ventana, variables_i
         
 def obtener_datos(num_columnas):
     try:
-        valores=[float(entrada.get()) for entrada in entradas]
-        iteraciones=len(valores)/(num_columnas+1)
-        iteraciones=int(iteraciones)
+        valores = [float(entrada.get()) for entrada in entradas]
+        iteraciones = len(valores)/(num_columnas+1)
+        iteraciones = int(iteraciones)
         for i in range(iteraciones):
         
             filas.append([ x for x in valores[(num_columnas+1)*i:(num_columnas+1)*(i+1)] ])
