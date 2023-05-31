@@ -1,6 +1,6 @@
 import tkinter as tk
 import customtkinter as ctk
-from funcions import generar_filas_columnas
+from generar_filas_columnas import generar_filas_columnas
 
 ctk.set_appearance_mode("system")
 # Crear ventana
