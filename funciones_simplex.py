@@ -41,8 +41,7 @@ def mostrar_grafica():
 
 
 def generar_filas_columnas(entrada_filas, entrada_columnas, ventana, variables_involucradas):
-    # print(entrada_filas)
-    # print(entrada_columnas)
+ 
     try:
         global num_filas
         global num_columnas
@@ -50,50 +49,52 @@ def generar_filas_columnas(entrada_filas, entrada_columnas, ventana, variables_i
         num_filas = int(entrada_filas.get())
         num_columnas = int(entrada_columnas.get())
         num_variables_involucradas= int(variables_involucradas.get())   
+
         # Crear nueva ventana
         nueva_ventana = ctk.CTkToplevel(ventana)
         nueva_ventana.title("Simplex Aumentado")
         
-
-
         # Crear marco en la nueva ventana
         frame_nueva_ventana = ctk.CTkFrame(nueva_ventana)
         frame_nueva_ventana.pack(padx=10, pady=10)
+
+        # Generar encabezados         
+        label = ctk.CTkLabel(frame_nueva_ventana, text="Ecuaciones\Variables")
+        label.grid(row=0, column=0, padx=5, pady=5)
+
+        # Generar X{j}
+        for j in range(1,num_columnas + 1):
+            label = ctk.CTkLabel(frame_nueva_ventana, text=f"X_{j}")
+            label.grid(row=0, column=j, padx=5, pady=5)  
         
-        
+        # Generar simbolo, b y lo que va al final
+        label = ctk.CTkLabel(frame_nueva_ventana, text="Simbolo")
+        label.grid(row=0, column=num_columnas+1, padx=5, pady=5)
+        label = ctk.CTkLabel(frame_nueva_ventana, text="b")
+        label.grid(row=0, column=num_columnas+2, padx=5, pady=5)
 
-        for i in range(num_filas+2):
-            for j in range(num_columnas+3):
-                if (i==0):
-                    if(j==0):
-                        label = ctk.CTkLabel(frame_nueva_ventana, text="Ecuaciones\Variables")
-                        label.grid(row=0, column=0, padx=5, pady=5)
-                    elif(j==num_columnas+1):
-                        label = ctk.CTkLabel(frame_nueva_ventana, text="Simbolo")
-                        label.grid(row=0, column=num_columnas+1, padx=5, pady=5)
-                    elif(j==num_columnas+2):
-                        label = ctk.CTkLabel(frame_nueva_ventana, text="b")
-                        label.grid(row=0, column=num_columnas+2, padx=5, pady=5)
-                    else:
-                        label = ctk.CTkLabel(frame_nueva_ventana, text=f"X{j}")
-                        label.grid(row=0, column=j, padx=5, pady=5)    
-                else:
-                    if (j==0):
+        for i in range(1, num_filas+2):
+            # Encabezado de fila
+            if(i==1):
+                label = ctk.CTkLabel(frame_nueva_ventana, text=f"Función Objetivo:")
+            else:
+                label = ctk.CTkLabel(frame_nueva_ventana, text=f"Restricción {i-1}:")
+            label.grid(row=i, column=0, padx=5, pady=5)
 
-                        if(i==1):
-                            label = ctk.CTkLabel(frame_nueva_ventana, text=f"Función Objetivo:")
-                            label.grid(row=i, column=j, padx=5, pady=5)
-                        else:
-                            label = ctk.CTkLabel(frame_nueva_ventana, text=f"Restricción {i-1}:")
-                            label.grid(row=i, column=j, padx=5, pady=5)
+            # Columnas de datos
+            for j in range(1, num_columnas+1):
+                entry = ctk.CTkEntry(frame_nueva_ventana)
+                entry.grid(row=i, column=j, padx=5, pady=5)
+                entradas.append(entry)
 
-                    elif(j==num_columnas+1):
-                        label = ctk.CTkLabel(frame_nueva_ventana, text="=")
-                        label.grid(row=i, column=j, padx=5, pady=5)
-                    else:
-                        entry = ctk.CTkEntry(frame_nueva_ventana)
-                        entry.grid(row=i, column=j, padx=5, pady=5)
-                        entradas.append(entry)
+            # Simbolo igual por cada fila
+            label = ctk.CTkLabel(frame_nueva_ventana, text="=")
+            label.grid(row=i, column=num_columnas+1, padx=5, pady=5)
+
+            # Resultado por fila
+            entry = ctk.CTkEntry(frame_nueva_ventana)
+            entry.grid(row=i, column=num_columnas+2, padx=5, pady=5)
+            entradas.append(entry)        
 
         boton_obtener_datos = ctk.CTkButton(frame_nueva_ventana, text="Solucionar", command=mostrar_tabla)
         boton_obtener_datos.grid(row=num_columnas+3, column=((num_columnas+3)//2), padx=5, pady=5)
@@ -105,7 +106,7 @@ def generar_filas_columnas(entrada_filas, entrada_columnas, ventana, variables_i
 
     except ValueError:
         tk.messagebox.showerror(title="Error", message="Introduzca solo numeros enteros.")
-
+        
 def obtener_datos(num_columnas):
     try:
         valores=[float(entrada.get()) for entrada in entradas]
@@ -123,7 +124,7 @@ def obtener_datos(num_columnas):
 
         res=linprog(c,A_eq=A, b_eq=b, method="highs")
 
-        return (c,A,b,res.fun)
+        return (c,A,b,res)
     
     except ValueError:
         tk.messagebox.showerror(title="Error", message="Introduzca soló numeros.")
@@ -142,7 +143,7 @@ def mostrar_tabla():
     columnas.extend([f"x{i}" for i in range(1,num_columnas+1)])
     columnas.extend(["Lado derecho"])
 
-    if(tiene_solucion):
+    if(tiene_solucion.fun):
 
         ventana_tabla = ctk.CTkToplevel()
 
