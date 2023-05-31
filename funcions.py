@@ -3,6 +3,8 @@ import customtkinter as ctk
 import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+import numpy as np
+from scipy.optimize import linprog
 
 filas:list=[]
 entradas:list=[]
@@ -111,7 +113,28 @@ def obtener_datos(num_columnas):
         
             filas.append([ x for x in valores[(num_columnas+1)*i:(num_columnas+1)*(i+1)] ])
 
-        print(filas)
+        matrix=np.array(filas)
+        
+        #Elminar cuando termine mis pruebas
+        print(matrix)
+
+        c=matrix[0][:num_columnas]
+        A=matrix[1:,:num_columnas]
+        b=matrix[1:,num_columnas]
+
+
+        #Eliminar cuando termine mis pruebas
+        print(c)
+        print(A)
+        print(b)
+
+        res=linprog(c,A_eq=A, b_eq=b, method="highs")
+
+        #Eliminar cuando termine mis pruebas
+        print(res.fun)
+
+        return (c,A,b,res.fun)
+    
     except ValueError:
         tk.messagebox.showerror(title="Error", message="Introduzca soló numeros.")
 
@@ -125,7 +148,7 @@ def mostrar_tabla():
     ventana_tabla = ctk.CTkToplevel()
     
 
-    obtener_datos(num_columnas)
+    c,A,b,tiene_solucion=obtener_datos(num_columnas)
 
     # Crear un DataFrame de ejemplo (puedes reemplazarlo con tus datos)
     datos = {
