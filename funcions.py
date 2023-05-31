@@ -114,24 +114,12 @@ def obtener_datos(num_columnas):
             filas.append([ x for x in valores[(num_columnas+1)*i:(num_columnas+1)*(i+1)] ])
 
         matrix=np.array(filas)
-        
-        #Elminar cuando termine mis pruebas
-        print(matrix)
 
         c=matrix[0][:num_columnas]
         A=matrix[1:,:num_columnas]
         b=matrix[1:,num_columnas]
 
-
-        #Eliminar cuando termine mis pruebas
-        print(c)
-        print(A)
-        print(b)
-
         res=linprog(c,A_eq=A, b_eq=b, method="highs")
-
-        #Eliminar cuando termine mis pruebas
-        print(res.fun)
 
         return (c,A,b,res.fun)
     
@@ -144,35 +132,50 @@ def mostrar_tabla():
     # Crear una nueva ventana Toplevel
     
     global num_columnas
-
-    ventana_tabla = ctk.CTkToplevel()
-    
+    global num_variables_involucradas
 
     c,A,b,tiene_solucion=obtener_datos(num_columnas)
 
-    # Crear un DataFrame de ejemplo (puedes reemplazarlo con tus datos)
-    datos = {
-         'Nombre': ['Juan', 'María', 'Pedro'],
-         'Edad': [25, 30, 35],
-         'Ciudad': ['Madrid', 'Barcelona', 'Valencia']
-     }
-    df = pd.DataFrame(datos)
-    
-    # Crear un widget Text donde se mostrará la tabla de Pandas
-    text_widget = tk.Text(ventana_tabla, height=10, width=30)
-    text_widget.pack()
-    
-    # Insertar el DataFrame en el widget Text
-    text_widget.insert(tk.END, df.to_string(index=False))
+    columnas =["Z"]
+    columnas.extend([f"x{i}" for i in range(1,num_columnas+1)])
+    columnas.extend(["Lado derecho"])
 
-    # Agregar un botón debajo del widget Text
-    boton_cerrar = ctk.CTkButton(ventana_tabla, text="Continuar", command=ventana_tabla.destroy)
-    boton_cerrar.pack()
-    
-    # Configurar la ventana y otros widgets si es necesario
-    ventana_tabla.title("Tabla con Pandas")
+    if(tiene_solucion):
 
-    # ...
+        ventana_tabla = ctk.CTkToplevel()
+
+        C=-c[:num_variables_involucradas] 
+        Cb=c[num_variables_involucradas:]
+        N=A[:,:num_variables_involucradas]
+        B=A[:,num_variables_involucradas:]
+        inv_B=np.linalg.inv(B)
+        tabla=np.zeros((A.shape[0]+1,A.shape[1]+2))
+        tabla[0][0]=1
+        tabla[0,1:num_variables_involucradas+1]=Cb.dot(inv_B.dot(N))-C
+        tabla[0,num_variables_involucradas+1:A.shape[1]+1]=Cb.dot(inv_B)
+        tabla[0][A.shape[1]+1]=Cb.dot(inv_B.dot(b.T))
+        tabla[1:,1:N.shape[1]+1]=inv_B.dot(N)
+        tabla[1:,N.shape[1]+1:A.shape[1]+1]=inv_B
+        tabla[1:,A.shape[1]+1]=inv_B.dot(b)
+        df=pd.DataFrame(tabla, columns=columnas)
+        df=df.where(~((-0.0001<df) & (df<0.0001)), 0)
+        # Crear un widget Text donde se mostrará la tabla de Pandas
+        text_widget = tk.Text(ventana_tabla, height=5, width=40)
+        text_widget.pack()
+        
+        # Insertar el DataFrame en el widget Text
+        text_widget.insert(tk.END, df.to_string(index=False))
+
+        # Agregar un botón debajo del widget Text
+        boton_cerrar = ctk.CTkButton(ventana_tabla, text="Continuar", command=ventana_tabla.destroy)
+        boton_cerrar.pack()
+        
+        # Configurar la ventana y otros widgets si es necesario
+        ventana_tabla.title("Tabla con Pandas")
+    else:
+        tk.messagebox.showerror(title="Error", message="Su problema no tiene solución. Replantee los coeficientes.")
+    
+    
     
     
 
