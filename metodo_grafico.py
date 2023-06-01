@@ -37,11 +37,8 @@ def constructor_grafico(matrix_A, vect_b):
             ax.plot(x, y)
     ax.grid(True)
    
-    print(y_x0)
-    print(y)
     print(coefientes_x_y)
     return fig
-
 
 
 
