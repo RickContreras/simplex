@@ -24,6 +24,9 @@ def constructor_grafico(matrix_A, vect_b):
 
     fig = plt.Figure(figsize=(6, 4), dpi=100)
     ax = fig.add_subplot(111)
+    ax.set_xlim(0, 20)
+    ax.set_ylim(-1, 20)
+    
     for i in range(1,len(coefientes_x_y), 2):
         if coefientes_x_y[i] == 0:
             # caso y = 0
