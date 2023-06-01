@@ -42,11 +42,6 @@ def constructor_grafico(matrix_A, vect_b):
     print(coefientes_x_y)
     return fig
 
-    # fig = plt.Figure(figsize=(6, 4), dpi=100)
-    # ax = fig.add_subplot(111)
-    # ax.vlines(x = vect_b, ymin = 0, ymax = max(x_2), colors = 'purple')
-    # ax.plot(x, y)   
-    # ax.grid(True)
 
 
 
@@ -64,23 +59,8 @@ def mostrar_grafica(num_columnas, entradas, filas):
 
     # Crear una nueva ventana Toplevel
     ventana_grafica = ctk.CTkToplevel()
-    
 
-    # if x_equal_to_zero:
-    #     # wait think better about this!
-    #     # y_1 = funcion_constante_y(x, b[1], params[1]) 
-    #     # ax.plot(x, y_1)
-    # y = funcion_lineal(x_1, A[2, 0], A[2, 1], b[2])
-    
-
-    # Crear una figura de matplotlib y agregar una gráfica
-
-    # Change this part!!!
     fig = constructor_grafico(A, b)
-    # ax = fig.add_subplot(111)
-    # ax.vlines(x = b[0], ymin = 0, ymax = max(x_2), colors = 'purple')
-    # ax.plot(x, y)   
-    # ax.grid(True)
 
     # Crear un objeto FigureCanvasTkAgg para mostrar la figura en la ventana
     canvas = FigureCanvasTkAgg(fig, master=ventana_grafica)
@@ -91,4 +71,3 @@ def mostrar_grafica(num_columnas, entradas, filas):
 
     # Configurar la ventana y otros widgets si es necesario
     ventana_grafica.title("Gráfica del problema")
-    # ...
